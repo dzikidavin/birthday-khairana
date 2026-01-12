@@ -1,56 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>For Khairana</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>For Khairana 🌷</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+  font-family: 'Nunito', sans-serif;
+}
 
 body {
   margin: 0;
   height: 100vh;
-  background: radial-gradient(circle at top, #1a1a2e, #0f3460);
-  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(120deg, #ffd6e8, #ffecc7, #dbeafe);
+  background-size: 300% 300%;
+  animation: bgMove 12s ease infinite;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #fff;
   overflow: hidden;
 }
 
+@keyframes bgMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
 .card {
-  width: 92%;
-  max-width: 480px;
-  background: rgba(255,255,255,0.12);
-  backdrop-filter: blur(18px);
-  border-radius: 28px;
-  padding: 48px 38px;
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(20px);
+  border-radius: 26px;
+  width: 90%;
+  max-width: 420px;
+  padding: 32px 28px;
   text-align: center;
-  box-shadow: 0 40px 90px rgba(0,0,0,0.5);
-  animation: fadeIn 1.2s ease;
-  z-index: 2;
+  box-shadow: 0 30px 70px rgba(0,0,0,0.15);
 }
 
 h1 {
-  font-weight: 500;
-  margin-bottom: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
 }
 
 p {
   font-weight: 300;
-  line-height: 1.9;
-  font-size: 16px;
+  line-height: 1.7;
+  font-size: 15px;
 }
 
 button {
-  margin-top: 32px;
-  padding: 14px 28px;
+  margin-top: 24px;
+  padding: 14px 26px;
   border-radius: 22px;
   border: none;
-  background: #fff;
-  color: #0f3460;
+  background: #ff7aa2;
+  color: #fff;
   font-size: 15px;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -58,149 +67,140 @@ button {
 
 button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 14px 36px rgba(0,0,0,0.35);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
 }
 
-.hidden { display: none; }
-
-.typing {
-  font-size: 26px;
-  margin-bottom: 18px;
-  min-height: 36px;
+.hidden {
+  display: none;
 }
 
-.final {
-  margin-top: 24px;
-  font-size: 17px;
-  line-height: 2;
-  animation: reveal 1s ease;
+.game-area {
+  position: relative;
+  height: 260px;
+  margin-top: 18px;
+  overflow: hidden;
 }
 
-canvas {
+.item {
   position: absolute;
-  top: 0;
-  left: 0;
-  pointer-events: none;
+  font-size: 28px;
+  cursor: pointer;
+  animation: float 6s linear infinite;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(30px); }
+@keyframes float {
+  from { transform: translateY(300px); }
+  to { transform: translateY(-60px); }
+}
+
+.counter {
+  margin-top: 10px;
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.final-text {
+  margin-top: 18px;
+  font-size: 15px;
+  line-height: 1.9;
+  animation: fadeUp 1s ease;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes reveal {
-  from { opacity: 0; transform: scale(0.96); }
-  to { opacity: 1; transform: scale(1); }
 }
 </style>
 </head>
 
 <body>
 
-<canvas id="confetti"></canvas>
-
 <div class="card">
 
-  <!-- STEP 1 -->
-  <div id="step1">
-    <div class="typing" id="typing"></div>
+  <!-- START -->
+  <div id="start">
+    <h1>Hi Khairana 🌷</h1>
     <p>
-      Hi Khairana.  
-      I know this is a bit unexpected.
+      I made a tiny game for your birthday.  
+      It only takes a minute.
     </p>
-    <button onclick="nextStep()">Continue</button>
+    <button onclick="startGame()">Start</button>
   </div>
 
-  <!-- STEP 2 -->
-  <div id="step2" class="hidden">
-    <h1>Happy 22nd Birthday 🎂</h1>
-    <p>
-      I hope today feels special for you,  
-      in whatever way you enjoy it most.
-    </p>
-    <button onclick="finalStep()">Stay</button>
+  <!-- GAME -->
+  <div id="game" class="hidden">
+    <h1>Collect the Joy ✨</h1>
+    <p>Tap 5 little things.</p>
+
+    <div class="game-area" id="gameArea"></div>
+
+    <div class="counter">
+      Collected: <span id="count">0</span> / 5
+    </div>
   </div>
 
   <!-- FINAL -->
   <div id="final" class="hidden">
-    <h1>Khairana</h1>
-    <div class="final" id="finalText">
-      I’m not great at writing things like this,  
-      but I didn’t want your birthday
-      to pass without me saying something properly.
+    <h1>Happy 22nd 🎂</h1>
+
+    <div class="final-text">
+      I didn’t want to just say “happy birthday.”  
+      I wanted to make something you could smile at.
 
       <br><br>
-      I really enjoy talking to you,  
-      and I like the person you are.  
-      That’s honestly it.
+      22 looks good on you.  
+      You carry it with calm, warmth, and your own quiet charm.
 
       <br><br>
-      I hope being 22 brings you
-      good days, calm moments,
-      and things that make you feel happy
-      without having to try too hard.
+      I hope this year feels light.  
+      And kind.  
+      And a little exciting.
 
       <br><br>
-      Happy birthday, Khairana 🤍  
-      Have a really good one.
+      Happy birthday, Khairana 🤍
     </div>
   </div>
 
 </div>
 
 <script>
-const nameText = "Khairana";
-let index = 0;
+let collected = 0;
+const emojis = ["✨","🌸","⭐","🎈","🤍"];
 
-function typeName() {
-  if (index < nameText.length) {
-    document.getElementById("typing").innerHTML += nameText.charAt(index);
-    index++;
-    setTimeout(typeName, 140);
-  }
-}
-typeName();
-
-function nextStep() {
-  document.getElementById("step1").classList.add("hidden");
-  document.getElementById("step2").classList.remove("hidden");
+function startGame() {
+  document.getElementById("start").classList.add("hidden");
+  document.getElementById("game").classList.remove("hidden");
+  spawnItems();
 }
 
-function finalStep() {
-  document.getElementById("step2").classList.add("hidden");
-  document.getElementById("final").classList.remove("hidden");
-  launchConfetti();
-}
+function spawnItems() {
+  const area = document.getElementById("gameArea");
+  area.innerHTML = "";
 
-const canvas = document.getElementById("confetti");
-const ctx = canvas.getContext("2d");
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+  emojis.forEach(() => {
+    const item = document.createElement("div");
+    item.className = "item";
+    item.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+    item.style.left = Math.random() * 85 + "%";
+    item.style.animationDuration = (4 + Math.random() * 4) + "s";
 
-let pieces = [];
+    item.onclick = () => {
+      collected++;
+      document.getElementById("count").innerText = collected;
+      item.remove();
 
-function launchConfetti() {
-  for (let i = 0; i < 120; i++) {
-    pieces.push({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      r: Math.random() * 6 + 2,
-      d: Math.random() * 2 + 1
-    });
-  }
-  requestAnimationFrame(drawConfetti);
-}
+      if (collected >= 5) {
+        endGame();
+      }
+    };
 
-function drawConfetti() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = "rgba(255,255,255,0.8)";
-  pieces.forEach(p => {
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-    ctx.fill();
-    p.y += p.d;
+    area.appendChild(item);
   });
-  requestAnimationFrame(drawConfetti);
+}
+
+function endGame() {
+  document.getElementById("game").classList.add("hidden");
+  document.getElementById("final").classList.remove("hidden");
 }
 </script>
 
