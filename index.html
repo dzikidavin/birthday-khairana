@@ -32,28 +32,33 @@ body {
 #scoreboard{position:absolute;top:10px;left:50%;transform:translateX(-50%);font-size:20px;font-weight:bold;color:#6a6eff;z-index:50;}
 #message{position:absolute;top:40px;left:50%;transform:translateX(-50%);font-size:18px;color:#6a6eff;font-weight:bold;opacity:0;transition:opacity 0.3s ease;z-index:50;}
 
-#cakeContainer{
-  display:none; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; 
-  opacity:0; transition:opacity 1.5s ease; z-index:60;
+#cakeWrapper{
+  display:none; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  text-align:center; z-index:60;
 }
 #cake{font-size:80px;cursor:pointer;position:relative;animation:bounce 1s ease infinite alternate;}
-.flame{position:absolute;top:-25px;left:50%;transform:translateX(-50%);font-size:20px;animation:flicker 0.24s infinite alternate;}
-@keyframes flicker{from{transform:translateX(-50%) scaleY(1);opacity:1}to{transform:translateX(-50%) scaleY(1.25);opacity:0.8}}
-@keyframes bounce{from{transform:translate(-50%,-50%) scale(1)}to{transform:translate(-50%,-52%) scale(1.08)}}
+.flame{position:absolute;top:-25px;left:50%;transform:translateX(-50%);font-size:20px;animation:flicker 0.1s infinite alternate;}
+@keyframes flicker{
+  0%{transform:translateX(-50%) scaleY(1);opacity:1;}
+  25%{transform:translateX(-50%) scaleY(1.3);opacity:0.9;}
+  50%{transform:translateX(-50%) scaleY(1.1);opacity:1;}
+  75%{transform:translateX(-50%) scaleY(1.25);opacity:0.85;}
+  100%{transform:translateX(-50%) scaleY(1);opacity:1;}
+}
+@keyframes bounce{0%{transform:translateY(0)}50%{transform:translateY(-10px)}100%{transform:translateY(0)}}
 
-#cakeContainer p{
-  margin-top:12px; font-size:18px; color:#6a6eff;
-  text-align:center;
+#cakeWrapper p{
+  margin-top:12px; font-size:18px; color:#6a6eff; text-align:center;
 }
 
 #victory{
-  display:none;width:90%;max-width:420px;background:rgba(255,255,255,0.96);
+  display:none;width:90%;max-width:480px;background:rgba(255,255,255,0.96);
   padding:28px;border-radius:20px;backdrop-filter:blur(10px);text-align:center;font-size:18px;color:#333;
-  animation:fadeIn 1s ease;position:absolute;top:calc(50% + 150px);left:50%;transform:translateX(-50%);z-index:100;
+  animation:fadeIn 1s ease; margin:20px auto; z-index:70;
 }
 @keyframes fadeIn{from{opacity:0;}to{opacity:1}}
 
-.confetti{position:absolute;width:8px;height:8px;pointer-events:none;animation:fall 2s linear infinite;}
+.confetti{position:absolute;width:8px;height:8px;pointer-events:none;animation:fall 2s linear forwards;}
 @keyframes fall{to{transform:translateY(100vh) rotate(360deg);opacity:0}}
 </style>
 </head>
@@ -72,7 +77,7 @@ body {
   <div id="message">Nice!</div>
 
   <!-- Cake -->
-  <div id="cakeContainer">
+  <div id="cakeWrapper">
     <div id="cake">🎂<div class="flame">🔥</div></div>
     <p>Click the cake to make a wish!</p>
   </div>
@@ -100,7 +105,7 @@ const startScreen = document.getElementById('startScreen');
 const container = document.getElementById('gameContainer');
 const scoreboard = document.getElementById('scoreboard');
 const message = document.getElementById('message');
-const cakeContainer = document.getElementById('cakeContainer');
+const cakeWrapper = document.getElementById('cakeWrapper');
 const cake = document.getElementById('cake');
 const flame = cake.querySelector('.flame');
 const victory = document.getElementById('victory');
@@ -144,14 +149,14 @@ function spawnItems(){
       collectSound.currentTime=0; collectSound.play();
 
       // Confetti sparkle
-      for(let j=0;j<16;j++){
+      for(let j=0;j<24;j++){
         const conf=document.createElement('div');
         conf.className='confetti';
         conf.style.left=(parseFloat(itm.style.left)+Math.random()*30)+'px';
         conf.style.top=(parseFloat(itm.style.top)+Math.random()*30)+'px';
         conf.style.background=['#6a6eff','#ffe066','#ffd6e8','#dbeafe','#ff7aa2','#ffdf7a'][Math.floor(Math.random()*6)];
         container.appendChild(conf);
-        setTimeout(()=>conf.remove(),2000);
+        setTimeout(()=>conf.remove(),2500);
       }
 
       itm.remove();
@@ -159,9 +164,9 @@ function spawnItems(){
       if(collected>=totalItems){
         scoreboard.style.display='none';
         itemElements.forEach(itm=>itm.remove());
-        cakeContainer.style.opacity=0;
-        cakeContainer.style.display='block';
-        setTimeout(()=>{cakeContainer.style.opacity=1},50);
+        cakeWrapper.style.opacity=0;
+        cakeWrapper.style.display='block';
+        setTimeout(()=>{cakeWrapper.style.opacity=1},50);
       }
     };
   }
@@ -196,18 +201,33 @@ cake.onclick=()=>{
   flame.style.display='none';
   blowSound.volume=0.4; blowSound.play();
 
+  // Confetti ekstra saat cake
+  for(let j=0;j<50;j++){
+    const conf=document.createElement('div');
+    conf.className='confetti';
+    conf.style.left=(window.innerWidth*Math.random())+'px';
+    conf.style.top=(window.innerHeight*Math.random()*0.5)+'px';
+    conf.style.background=['#6a6eff','#ffe066','#ffd6e8','#dbeafe','#ff7aa2','#ffdf7a'][Math.floor(Math.random()*6)];
+    container.appendChild(conf);
+    setTimeout(()=>conf.remove(),3000);
+  }
+
   // Start romance song fade-in
   romanceSong.volume=0;
   romanceSong.play();
   let vol=0;
   let fade=setInterval(()=>{
-    if(vol<0.05){ // half volume
+    if(vol<0.05){
       vol+=0.0025;
       romanceSong.volume = vol;
     }else clearInterval(fade);
   },50);
 
-  setTimeout(()=>{cakeContainer.style.display='none'; victory.style.display='block';},500);
+  // Hilangkan cake, tampilkan pesan
+  setTimeout(()=>{
+    cakeWrapper.style.display='none';
+    victory.style.display='block';
+  },500);
 };
 </script>
 </body>
