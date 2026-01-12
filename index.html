@@ -83,6 +83,7 @@ body {
 <audio id="collectSound1" src="https://opengameart.org/sites/default/files/coin.ogg"></audio>
 <audio id="collectSound2" src="https://opengameart.org/sites/default/files/coin2.ogg"></audio>
 <audio id="cakeMusic" src="https://opengameart.org/sites/default/files/soft-happy-loop.ogg" loop></audio>
+<audio id="romanceSong" src="https://opengameart.org/sites/default/files/romantic-soft-loop.ogg" loop></audio>
 <audio id="blowSound" src="https://pixabay.com/sound-effects/blow-out-the-candle-381892/"></audio>
 
 <script>
@@ -99,6 +100,7 @@ const victory = document.getElementById('victory');
 
 const bgMusic = document.getElementById('bgMusic');
 const cakeMusic = document.getElementById('cakeMusic');
+const romanceSong = document.getElementById('romanceSong');
 const collectSounds = [document.getElementById('collectSound1'), document.getElementById('collectSound2')];
 const blowSound = document.getElementById('blowSound');
 
@@ -158,6 +160,17 @@ function spawnItems(){
         cakeContainer.style.display='block';
         cakeMusic.volume=0.05;
         cakeMusic.play();
+        // **fade-in romance song with half volume**
+        romanceSong.volume=0;
+        romanceSong.play();
+        let vol=0;
+        let fade=setInterval(()=>{
+          if(vol<0.05){ // half volume
+            vol+=0.0025;
+            romanceSong.volume = vol;
+          }else clearInterval(fade);
+        },50);
+
         setTimeout(()=>{
           cakeContainer.style.opacity=1;
           // extra sparkle around cake
