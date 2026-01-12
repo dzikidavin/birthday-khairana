@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>For Khairana</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  height: 100vh;
+  background: radial-gradient(circle at top, #1a1a2e, #0f3460);
+  font-family: 'Poppins', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  overflow: hidden;
+}
+
+.card {
+  width: 92%;
+  max-width: 480px;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(18px);
+  border-radius: 28px;
+  padding: 48px 38px;
+  text-align: center;
+  box-shadow: 0 40px 90px rgba(0,0,0,0.5);
+  animation: fadeIn 1.2s ease;
+  z-index: 2;
+}
+
+h1 {
+  font-weight: 500;
+  margin-bottom: 14px;
+}
+
+p {
+  font-weight: 300;
+  line-height: 1.9;
+  font-size: 16px;
+}
+
+button {
+  margin-top: 32px;
+  padding: 14px 28px;
+  border-radius: 22px;
+  border: none;
+  background: #fff;
+  color: #0f3460;
+  font-size: 15px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 36px rgba(0,0,0,0.35);
+}
+
+.hidden { display: none; }
+
+.typing {
+  font-size: 26px;
+  margin-bottom: 18px;
+  min-height: 36px;
+}
+
+.final {
+  margin-top: 24px;
+  font-size: 17px;
+  line-height: 2;
+  animation: reveal 1s ease;
+}
+
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes reveal {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="confetti"></canvas>
+
+<div class="card">
+
+  <!-- STEP 1 -->
+  <div id="step1">
+    <div class="typing" id="typing"></div>
+    <p>
+      Hi Khairana.  
+      I know this is a bit unexpected.
+    </p>
+    <button onclick="nextStep()">Continue</button>
+  </div>
+
+  <!-- STEP 2 -->
+  <div id="step2" class="hidden">
+    <h1>Happy 22nd Birthday 🎂</h1>
+    <p>
+      I hope today feels special for you,  
+      in whatever way you enjoy it most.
+    </p>
+    <button onclick="finalStep()">Stay</button>
+  </div>
+
+  <!-- FINAL -->
+  <div id="final" class="hidden">
+    <h1>Khairana</h1>
+    <div class="final" id="finalText">
+      I’m not great at writing things like this,  
+      but I didn’t want your birthday
+      to pass without me saying something properly.
+
+      <br><br>
+      I really enjoy talking to you,  
+      and I like the person you are.  
+      That’s honestly it.
+
+      <br><br>
+      I hope being 22 brings you
+      good days, calm moments,
+      and things that make you feel happy
+      without having to try too hard.
+
+      <br><br>
+      Happy birthday, Khairana 🤍  
+      Have a really good one.
+    </div>
+  </div>
+
+</div>
+
+<script>
+const nameText = "Khairana";
+let index = 0;
+
+function typeName() {
+  if (index < nameText.length) {
+    document.getElementById("typing").innerHTML += nameText.charAt(index);
+    index++;
+    setTimeout(typeName, 140);
+  }
+}
+typeName();
+
+function nextStep() {
+  document.getElementById("step1").classList.add("hidden");
+  document.getElementById("step2").classList.remove("hidden");
+}
+
+function finalStep() {
+  document.getElementById("step2").classList.add("hidden");
+  document.getElementById("final").classList.remove("hidden");
+  launchConfetti();
+}
+
+const canvas = document.getElementById("confetti");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let pieces = [];
+
+function launchConfetti() {
+  for (let i = 0; i < 120; i++) {
+    pieces.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 6 + 2,
+      d: Math.random() * 2 + 1
+    });
+  }
+  requestAnimationFrame(drawConfetti);
+}
+
+function drawConfetti() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "rgba(255,255,255,0.8)";
+  pieces.forEach(p => {
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fill();
+    p.y += p.d;
+  });
+  requestAnimationFrame(drawConfetti);
+}
+</script>
+
+</body>
+</html>
