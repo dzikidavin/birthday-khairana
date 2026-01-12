@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Happy Birthday, Khairana 🎉</title>
+<title>Happy Birthday, Khairana</title>
 <style>
 body {
   margin:0; overflow:hidden; font-family: 'Courier New', monospace;
@@ -52,14 +52,14 @@ body {
 
   <!-- Start Screen -->
   <div id="startScreen">
-    <h1>Happy Birthday, Khairana! 🎉</h1>
+    <h1>Happy Birthday, Khairana!</h1>
     <p>Click Start to play your mini birthday game!</p>
     <button id="startBtn">Start!</button>
   </div>
 
   <!-- Scoreboard -->
   <div id="scoreboard">Collected: 0 / 15</div>
-  <div id="message">✨ Nice!</div>
+  <div id="message">Nice!</div>
 
   <!-- Cake -->
   <div id="cakeContainer">
@@ -69,20 +69,17 @@ body {
 
   <!-- Birthday Message -->
   <div id="victory">
-    <p>I’m not great at writing things like this,<br>
-    but I didn’t want your birthday to pass without me saying something properly.</p>
-    <p>I really enjoy talking to you,<br>and I like the person you are.<br>That’s honestly it 😏</p>
-    <p>I hope being 22 brings you<br>good days, calm moments,<br>and things that make you happy<br>without trying too hard.</p>
-    <p>Happy birthday, Khairana 🤍<br>Have an amazing one!</p>
+    <p>I really enjoy talking to you,</p>
+    <p>and I like you just the way you are.</p>
+    <p>I hope being 22 brings you<br>good days, calm moments,<br>and things that make you happy without trying too hard.</p>
+    <p>Happy birthday, Khairana 🤍.<br>Have an amazing one!</p>
   </div>
 
 </div>
 
 <!-- Audio -->
 <audio id="bgMusic" src="https://opengameart.org/sites/default/files/8-bit-happy-loop.ogg" loop></audio>
-<audio id="collectSound1" src="https://opengameart.org/sites/default/files/coin.ogg"></audio>
-<audio id="collectSound2" src="https://opengameart.org/sites/default/files/coin2.ogg"></audio>
-<audio id="cakeMusic" src="https://opengameart.org/sites/default/files/soft-happy-loop.ogg" loop></audio>
+<audio id="collectSound" src="https://opengameart.org/sites/default/files/coin.ogg"></audio>
 <audio id="romanceSong" src="https://opengameart.org/sites/default/files/romantic-soft-loop.ogg" loop></audio>
 <audio id="blowSound" src="https://pixabay.com/sound-effects/blow-out-the-candle-381892/"></audio>
 
@@ -99,9 +96,8 @@ const flame = cake.querySelector('.flame');
 const victory = document.getElementById('victory');
 
 const bgMusic = document.getElementById('bgMusic');
-const cakeMusic = document.getElementById('cakeMusic');
+const collectSound = document.getElementById('collectSound');
 const romanceSong = document.getElementById('romanceSong');
-const collectSounds = [document.getElementById('collectSound1'), document.getElementById('collectSound2')];
 const blowSound = document.getElementById('blowSound');
 
 // Game variables
@@ -138,10 +134,9 @@ function spawnItems(){
       message.style.opacity=1;
       setTimeout(()=>message.style.opacity=0,900);
 
-      const s = collectSounds[Math.floor(Math.random()*collectSounds.length)];
-      s.currentTime=0; s.play();
+      collectSound.currentTime=0; collectSound.play();
 
-      // Confetti extra sparkle
+      // Confetti sparkle
       for(let j=0;j<16;j++){
         const conf=document.createElement('div');
         conf.className='confetti';
@@ -156,40 +151,18 @@ function spawnItems(){
 
       if(collected>=totalItems){
         scoreboard.style.display='none';
+        itemElements.forEach(itm=>itm.remove());
         cakeContainer.style.opacity=0;
         cakeContainer.style.display='block';
-        cakeMusic.volume=0.05;
-        cakeMusic.play();
-        // **fade-in romance song with half volume**
-        romanceSong.volume=0;
-        romanceSong.play();
-        let vol=0;
-        let fade=setInterval(()=>{
-          if(vol<0.05){ // half volume
-            vol+=0.0025;
-            romanceSong.volume = vol;
-          }else clearInterval(fade);
-        },50);
-
         setTimeout(()=>{
           cakeContainer.style.opacity=1;
-          // extra sparkle around cake
-          for(let k=0;k<25;k++){
-            const conf=document.createElement('div');
-            conf.className='confetti';
-            conf.style.left=(window.innerWidth/2-40+Math.random()*80)+'px';
-            conf.style.top=(window.innerHeight/2-40+Math.random()*80)+'px';
-            conf.style.background=['#6a6eff','#ffe066','#ffd6e8','#dbeafe','#ff7aa2','#ffdf7a'][Math.floor(Math.random()*6)];
-            container.appendChild(conf);
-            setTimeout(()=>conf.remove(),2500);
-          }
         },50);
       }
     };
   }
 }
 
-// Game loop - move items with animation
+// Game loop - move items
 function gameLoop(){
   itemElements.forEach(itm=>{
     if(!itm.parentElement) return;
@@ -217,7 +190,18 @@ function gameLoop(){
 cake.onclick=()=>{
   flame.style.display='none';
   blowSound.volume=0.4; blowSound.play();
-  cakeMusic.pause();
+
+  // Start romance song fade-in
+  romanceSong.volume=0;
+  romanceSong.play();
+  let vol=0;
+  let fade=setInterval(()=>{
+    if(vol<0.05){ // half volume
+      vol+=0.0025;
+      romanceSong.volume = vol;
+    }else clearInterval(fade);
+  },50);
+
   setTimeout(()=>{
     cakeContainer.style.display='none';
     victory.style.display='block';
