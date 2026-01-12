@@ -28,8 +28,6 @@ body {
   position:absolute; font-size:28px; cursor:pointer; user-select:none; z-index:40;
   transition: transform 0.1s linear;
 }
-#scoreboard{position:absolute;top:10px;left:50%;transform:translateX(-50%);font-size:20px;font-weight:bold;color:#6a6eff;z-index:50;}
-#message{position:absolute;bottom:110px;left:50%;transform:translateX(-50%);font-size:18px;color:#6a6eff;font-weight:bold;opacity:0;transition:opacity 0.3s ease;z-index:50;}
 
 #cakeContainer{
   display:none; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; 
@@ -40,7 +38,16 @@ body {
 @keyframes flicker{from{transform:translateX(-50%) scaleY(1);opacity:1}to{transform:translateX(-50%) scaleY(1.25);opacity:0.8}}
 @keyframes bounce{from{transform:translate(-50%,-50%) scale(1)}to{transform:translate(-50%,-52%) scale(1.08)}}
 
-#victory{display:none;width:90%;max-width:420px;background:rgba(255,255,255,0.96);padding:28px;border-radius:20px;backdrop-filter:blur(10px);text-align:center;font-size:18px;color:#333;animation:fadeIn 1s ease;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:100;}
+#cakeContainer p{
+  margin-top:12px; font-size:18px; color:#6a6eff;
+  text-align:center;
+}
+
+#victory{
+  display:none;width:90%;max-width:420px;background:rgba(255,255,255,0.96);
+  padding:28px;border-radius:20px;backdrop-filter:blur(10px);text-align:center;font-size:18px;color:#333;
+  animation:fadeIn 1s ease;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:100;
+}
 @keyframes fadeIn{from{opacity:0;}to{opacity:1}}
 
 .confetti{position:absolute;width:8px;height:8px;pointer-events:none;animation:fall 2s linear infinite;}
@@ -57,10 +64,6 @@ body {
     <button id="startBtn">Start!</button>
   </div>
 
-  <!-- Scoreboard -->
-  <div id="scoreboard">Collected: 0 / 15</div>
-  <div id="message">Nice!</div>
-
   <!-- Cake -->
   <div id="cakeContainer">
     <div id="cake">🎂<div class="flame">🔥</div></div>
@@ -71,120 +74,35 @@ body {
   <div id="victory">
     <p>I really enjoy talking to you,</p>
     <p>and I like you just the way you are.</p>
-    <p>I hope being 22 brings you<br>good days, calm moments,<br>and things that make you happy without trying too hard.</p>
+    <p>I hope being 22 brings you<br>good days, calm moments,<br>and things that make you happy without trying too hard.<br>
+    May this year bless you with health, joy, and everything your heart wishes for.</p>
     <p>Happy birthday, Khairana 🤍.<br>Have an amazing one!</p>
   </div>
 
 </div>
 
 <!-- Audio -->
-<audio id="bgMusic" src="https://opengameart.org/sites/default/files/8-bit-happy-loop.ogg" loop></audio>
-<audio id="collectSound" src="https://opengameart.org/sites/default/files/coin.ogg"></audio>
-<audio id="romanceSong" src="https://opengameart.org/sites/default/files/romantic-soft-loop.ogg" loop></audio>
+<audio id="romanceSong" src="noches-de-melancolia.mp3" loop></audio>
 <audio id="blowSound" src="https://pixabay.com/sound-effects/blow-out-the-candle-381892/"></audio>
 
 <script>
 // Elements
 const startBtn = document.getElementById('startBtn');
 const startScreen = document.getElementById('startScreen');
-const container = document.getElementById('gameContainer');
-const scoreboard = document.getElementById('scoreboard');
-const message = document.getElementById('message');
 const cakeContainer = document.getElementById('cakeContainer');
 const cake = document.getElementById('cake');
 const flame = cake.querySelector('.flame');
 const victory = document.getElementById('victory');
-
-const bgMusic = document.getElementById('bgMusic');
-const collectSound = document.getElementById('collectSound');
 const romanceSong = document.getElementById('romanceSong');
 const blowSound = document.getElementById('blowSound');
-
-// Game variables
-let collected = 0;
-const totalItems = 15;
-const itemsArray = ["💖","✨","🌸","⭐","🎈","💫","🌷"];
-const itemElements = [];
 
 // Start game
 startBtn.onclick=()=>{
   startScreen.style.display='none';
-  bgMusic.volume=0.08; bgMusic.play();
-  spawnItems();
-  requestAnimationFrame(gameLoop);
+  cakeContainer.style.opacity=0;
+  cakeContainer.style.display='block';
+  setTimeout(()=>{cakeContainer.style.opacity=1},50);
 };
-
-// Spawn moving items
-function spawnItems(){
-  for(let i=0;i<totalItems;i++){
-    const itm=document.createElement('div');
-    itm.className='item';
-    itm.innerText=itemsArray[Math.floor(Math.random()* itemsArray.length)];
-    itm.style.left=Math.random()*(window.innerWidth-40)+'px';
-    itm.style.top=Math.random()*(window.innerHeight-200)+'px';
-    itm.dataset.vx=(Math.random()*2-1)*2;
-    itm.dataset.vy=(Math.random()*2-1)*2;
-    itm.dataset.rotate=(Math.random()*2-1)*5;
-    container.appendChild(itm);
-    itemElements.push(itm);
-
-    itm.onclick = ()=>{
-      collected++;
-      scoreboard.innerText=`Collected: ${collected} / ${totalItems}`;
-      message.style.opacity=1;
-      setTimeout(()=>message.style.opacity=0,900);
-
-      collectSound.currentTime=0; collectSound.play();
-
-      // Confetti sparkle
-      for(let j=0;j<16;j++){
-        const conf=document.createElement('div');
-        conf.className='confetti';
-        conf.style.left=(parseFloat(itm.style.left)+Math.random()*30)+'px';
-        conf.style.top=(parseFloat(itm.style.top)+Math.random()*30)+'px';
-        conf.style.background=['#6a6eff','#ffe066','#ffd6e8','#dbeafe','#ff7aa2','#ffdf7a'][Math.floor(Math.random()*6)];
-        container.appendChild(conf);
-        setTimeout(()=>conf.remove(),2000);
-      }
-
-      itm.remove();
-
-      if(collected>=totalItems){
-        scoreboard.style.display='none';
-        itemElements.forEach(itm=>itm.remove());
-        cakeContainer.style.opacity=0;
-        cakeContainer.style.display='block';
-        setTimeout(()=>{
-          cakeContainer.style.opacity=1;
-        },50);
-      }
-    };
-  }
-}
-
-// Game loop - move items
-function gameLoop(){
-  itemElements.forEach(itm=>{
-    if(!itm.parentElement) return;
-    let x = parseFloat(itm.style.left);
-    let y = parseFloat(itm.style.top);
-    let vx = parseFloat(itm.dataset.vx);
-    let vy = parseFloat(itm.dataset.vy);
-    let r = parseFloat(itm.dataset.rotate);
-
-    x += vx; y += vy;
-    if(x<0||x>window.innerWidth-40) vx*=-1;
-    if(y<0||y>window.innerHeight-100) vy*=-1;
-
-    itm.style.left = x+'px';
-    itm.style.top = y+'px';
-    itm.style.transform = `rotate(${r}deg)`;
-    itm.dataset.vx = vx;
-    itm.dataset.vy = vy;
-    itm.dataset.rotate = r + 2;
-  });
-  requestAnimationFrame(gameLoop);
-}
 
 // Cake click
 cake.onclick=()=>{
@@ -202,10 +120,7 @@ cake.onclick=()=>{
     }else clearInterval(fade);
   },50);
 
-  setTimeout(()=>{
-    cakeContainer.style.display='none';
-    victory.style.display='block';
-  },500);
+  setTimeout(()=>{cakeContainer.style.display='none'; victory.style.display='block';},500);
 };
 </script>
 </body>
