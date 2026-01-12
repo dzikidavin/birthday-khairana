@@ -28,7 +28,6 @@ body {
   position:absolute; font-size:28px; cursor:pointer; user-select:none; z-index:40;
   transition: transform 0.1s linear;
 }
-
 #scoreboard{position:absolute;top:10px;left:50%;transform:translateX(-50%);font-size:20px;font-weight:bold;color:#6a6eff;z-index:50;}
 #message{position:absolute;top:40px;left:50%;transform:translateX(-50%);font-size:18px;color:#6a6eff;font-weight:bold;opacity:0;transition:opacity 0.3s ease;z-index:50;}
 
@@ -52,12 +51,12 @@ body {
 }
 
 #victory{
-  display:none;width:90%;max-width:480px;background:rgba(255,255,255,0.96);
-  padding:28px;border-radius:20px;backdrop-filter:blur(10px);text-align:center;font-size:18px;color:#333;
-  animation:fadeIn 1s ease; margin:20px auto; z-index:70;
+  display:none; width:90%; max-width:480px; position:absolute;
+  top:50%; left:50%; transform:translate(-50%,-50%);
+  background:rgba(255,255,255,0.96);
+  padding:28px;border-radius:20px;backdrop-filter:blur(10px);
+  text-align:center;font-size:18px;color:#333; z-index:70;
 }
-@keyframes fadeIn{from{opacity:0;}to{opacity:1}}
-
 .confetti{position:absolute;width:8px;height:8px;pointer-events:none;animation:fall 2s linear forwards;}
 @keyframes fall{to{transform:translateY(100vh) rotate(360deg);opacity:0}}
 </style>
@@ -84,18 +83,20 @@ body {
 
   <!-- Birthday Message -->
   <div id="victory">
-    <p>I really enjoy talking to you,</p>
-    <p>and I like you just the way you are.</p>
-    <p>I hope being 22 brings you<br>good days, calm moments,<br>and things that make you happy without trying too hard.<br>
-    May this year bless you with health, joy, and everything your heart wishes for.</p>
-    <p>Happy birthday, Khairana 🤍.<br>Have an amazing one!</p>
+    <p>I really enjoy talking to you,
+    <br>and I like you just the way you are.</p>
+    <p>I hope being 22 brings you
+    <br>good days, calm moments,
+    <br>and things that make you happy without trying too hard.
+    <br>may this year bless you with health, joy, and everything your heart wishes for.</p>
+    <p>Happy birthday, Khairana 🤍.
+    <br>Have an amazing one!</p>
   </div>
 
 </div>
 
 <!-- Audio -->
 <audio id="collectSound" src="https://opengameart.org/sites/default/files/coin.ogg"></audio>
-<audio id="romanceSong" src="https://cdn.pixabay.com/download/audio/2023/04/18/audio_7b11c05f1b.mp3?filename=pop-noches-de-melancolia-454301.mp3" loop></audio>
 <audio id="blowSound" src="https://pixabay.com/sound-effects/blow-out-the-candle-381892/"></audio>
 
 <script>
@@ -111,7 +112,6 @@ const flame = cake.querySelector('.flame');
 const victory = document.getElementById('victory');
 
 const collectSound = document.getElementById('collectSound');
-const romanceSong = document.getElementById('romanceSong');
 const blowSound = document.getElementById('blowSound');
 
 // Game variables
@@ -199,7 +199,8 @@ function gameLoop(){
 // Cake click
 cake.onclick=()=>{
   flame.style.display='none';
-  blowSound.volume=0.4; blowSound.play();
+  blowSound.volume=0.4;
+  blowSound.play().catch(err=>console.log(err));
 
   // Confetti ekstra saat cake
   for(let j=0;j<50;j++){
@@ -211,17 +212,6 @@ cake.onclick=()=>{
     container.appendChild(conf);
     setTimeout(()=>conf.remove(),3000);
   }
-
-  // Start romance song fade-in
-  romanceSong.volume=0;
-  romanceSong.play();
-  let vol=0;
-  let fade=setInterval(()=>{
-    if(vol<0.05){
-      vol+=0.0025;
-      romanceSong.volume = vol;
-    }else clearInterval(fade);
-  },50);
 
   // Hilangkan cake, tampilkan pesan
   setTimeout(()=>{
