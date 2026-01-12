@@ -21,127 +21,167 @@
 
   #gameContainer { position: relative; width: 100vw; height: 100vh; }
 
+  /* Start Screen */
+  #startScreen {
+    position: absolute;
+    top:0; left:0;
+    width:100%; height:100%;
+    display:flex; flex-direction:column;
+    justify-content:center; align-items:center;
+    background: rgba(255,255,255,0.8);
+    backdrop-filter: blur(10px);
+    z-index: 100;
+    text-align:center;
+  }
+  #startScreen button {
+    padding: 14px 28px;
+    font-size:18px;
+    border:none;
+    border-radius:22px;
+    background:#ff7aa2; color:white;
+    cursor:pointer;
+    margin-top:20px;
+    transition: transform 0.2s;
+  }
+  #startScreen button:hover { transform:translateY(-3px); }
+
+  /* Player / Character */
   #player {
     position: absolute;
     bottom: 50px;
     left: 50%;
-    width: 40px;
-    height: 40px;
-    background: #ff4d6d;
-    border-radius: 4px;
+    width: 50px;
+    height: 50px;
     transform: translateX(-50%);
-    transition: left 0.05s linear;
+    z-index:50;
   }
 
+  /* Floating Items */
   .item {
     position: absolute;
     font-size: 28px;
     cursor: pointer;
     user-select: none;
+    z-index:40;
   }
 
   #scoreboard {
     position: absolute;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 20px;
-    font-weight: bold;
-    color: #ff4d6d;
+    top:10px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:20px;
+    font-weight:bold;
+    color:#ff4d6d;
+    z-index:50;
   }
 
   #message {
     position: absolute;
-    bottom: 120px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 18px;
-    color: #ff4d6d;
-    font-weight: bold;
-    opacity: 0;
+    bottom:120px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:18px;
+    color:#ff4d6d;
+    font-weight:bold;
+    opacity:0;
     transition: opacity 0.3s ease;
+    z-index:50;
   }
 
+  /* Cake */
   #cakeContainer {
-    display: none;
-    position: absolute;
-    top: 50%;
-    left: 50%;
+    display:none;
+    position:absolute;
+    top:50%;
+    left:50%;
     transform: translate(-50%, -50%);
-    text-align: center;
+    text-align:center;
     animation: cakeBounce 1s ease infinite alternate;
+    z-index:60;
   }
-
   @keyframes cakeBounce {
     from { transform: translate(-50%, -50%) scale(1); }
     to { transform: translate(-50%, -52%) scale(1.05); }
   }
-
-  #cake {
-    font-size: 80px;
-    cursor: pointer;
-    position: relative;
-    display: inline-block;
-  }
-
+  #cake { position: relative; cursor:pointer; font-size:80px; }
   .flame {
-    position: absolute;
-    top: -25px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 20px;
-    animation: flicker 0.2s infinite alternate;
+    position:absolute;
+    top:-25px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:20px;
+    animation:flicker 0.2s infinite alternate;
   }
-
   @keyframes flicker {
     from { transform: translateX(-50%) scaleY(1); opacity:1; }
     to { transform: translateX(-50%) scaleY(1.3); opacity:0.8; }
   }
 
+  /* Victory / Message */
   #victory {
-    display: none;
-    width: 90%;
-    max-width: 400px;
+    display:none;
+    width:90%;
+    max-width:400px;
     background: rgba(255,255,255,0.95);
-    padding: 25px;
-    border-radius: 25px;
+    padding:25px;
+    border-radius:25px;
     backdrop-filter: blur(10px);
-    text-align: center;
-    font-size: 18px;
-    color: #333;
+    text-align:center;
+    font-size:18px;
+    color:#333;
     animation: fadeIn 1s ease;
+    z-index:100;
+    position:absolute;
+    top:50%; left:50%;
+    transform:translate(-50%,-50%);
   }
 
+  /* Confetti */
   .confetti {
     position: absolute;
     width: 8px;
     height: 8px;
     pointer-events: none;
     animation: confettiFall linear infinite;
+    z-index:70;
   }
-
   @keyframes confettiFall {
     0% { transform: translateY(0) rotate(0deg); opacity:1; }
     100% { transform: translateY(100vh) rotate(360deg); opacity:0; }
   }
 
   @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from { opacity:0; transform:translateY(20px); }
+    to { opacity:1; transform:translateY(0); }
   }
 </style>
 </head>
 <body>
+
 <div id="gameContainer">
-  <div id="player"></div>
-  <div id="scoreboard">Collected: 0 / 25</div>
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h1>Happy Birthday Khairana 🎉</h1>
+    <p>Click Start to play a tiny game I made for you!</p>
+    <button id="startBtn">Start</button>
+  </div>
+
+  <!-- Player / Character -->
+  <img id="player" src="https://i.ibb.co/6rJY3Zk/chibi-character.png" alt="Character">
+
+  <!-- Score & Messages -->
+  <div id="scoreboard">Collected: 0 / 12</div>
   <div id="message">🎉 Nice catch!</div>
 
+  <!-- Cake -->
   <div id="cakeContainer">
     <div id="cake">🎂<div class="flame">🔥</div></div>
     <p>Click the cake to make a wish!</p>
   </div>
 
+  <!-- Victory -->
   <div id="victory">
     <p>
       I’m not great at writing things like this,<br>
@@ -166,12 +206,14 @@
   </div>
 </div>
 
-<!-- Sounds -->
+<!-- Audio -->
+<audio id="bgMusic" src="https://freesound.org/data/previews/415/415209_5121236-lq.mp3" loop></audio>
 <audio id="collectSound" src="https://freesound.org/data/previews/82/82921_1022651-lq.mp3"></audio>
-<audio id="victorySound" src="https://freesound.org/data/previews/331/331912_3248244-lq.mp3"></audio>
 <audio id="wishSound" src="https://freesound.org/data/previews/342/342756_3248244-lq.mp3"></audio>
 
 <script>
+const startBtn = document.getElementById('startBtn');
+const startScreen = document.getElementById('startScreen');
 const player = document.getElementById('player');
 const container = document.getElementById('gameContainer');
 const scoreboard = document.getElementById('scoreboard');
@@ -181,15 +223,23 @@ const cake = document.getElementById('cake');
 const flame = cake.querySelector('.flame');
 const victory = document.getElementById('victory');
 
+const bgMusic = document.getElementById('bgMusic');
 const collectSound = document.getElementById('collectSound');
-const victorySound = document.getElementById('victorySound');
 const wishSound = document.getElementById('wishSound');
 
 let collected = 0;
-const totalItems = 25;
+const totalItems = 12;
 const itemsArray = ["💖","✨","🌸","⭐","🎈","💫","🌷"];
 const activeItems = [];
 
+// Start button
+startBtn.addEventListener('click', ()=>{
+  startScreen.style.display = 'none';
+  bgMusic.volume = 0.1; // kecil
+  bgMusic.play();
+});
+
+// Spawn floating items
 function randomPosition() {
   const x = Math.random() * (window.innerWidth - 40);
   const y = Math.random() * (window.innerHeight - 150);
@@ -237,6 +287,7 @@ function showMessage(text) {
   setTimeout(() => { message.style.opacity = 0; }, 1000);
 }
 
+// Confetti
 function spawnConfetti(x, y) {
   for(let i=0;i<15;i++){
     const conf = document.createElement('div');
@@ -252,13 +303,12 @@ function spawnConfetti(x, y) {
   }
 }
 
+// Show cake
 function showCake() {
   cakeContainer.style.display = 'block';
-  victorySound.currentTime = 0;
-  victorySound.play();
 }
 
-// Tiup lilin
+// Lilin ditiup
 cake.addEventListener('click', () => {
   flame.style.display = 'none'; // lilin padam
   spawnConfetti(window.innerWidth/2, window.innerHeight/2);
@@ -280,7 +330,7 @@ document.addEventListener('keydown', (e) => {
   if(e.key === 'ArrowLeft') posX -= step;
   if(e.key === 'ArrowRight') posX += step;
   if(posX < 0) posX = 0;
-  if(posX > window.innerWidth-40) posX = window.innerWidth-40;
+  if(posX > window.innerWidth-50) posX = window.innerWidth-50;
   player.style.left = posX + 'px';
 });
 </script>
